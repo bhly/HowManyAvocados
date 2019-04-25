@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.geometry.Pos;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundRepeat;
@@ -38,6 +39,8 @@ public class AvoCalc extends Application{
 	private RadioButton no;
 	
 	private Label checkLabel;
+	
+	private Alert alert;
 	
 	public void start(Stage stage){
 		
@@ -70,12 +73,17 @@ public class AvoCalc extends Application{
 		pane.setVgap(20);
 		pane.setAlignment(Pos.CENTER);
 		
+		
+		
+		
 		Scene scene = new Scene(pane, 270, 300);
 		
 		BackgroundImage bg = new BackgroundImage(new Image("file:bg.png", 400,400,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
 				
 		pane.setBackground(new Background(bg));
+		
+		
 		
 		stage.setScene(scene);
 		stage.show();
@@ -89,7 +97,9 @@ public class AvoCalc extends Application{
 			else if(no.isSelected())
 				avo.setSale(false);
 			avo.calculate(avo.getDollars(), avo.getSale());
-			message1.setText("That's " + avo.getAvocados() + " avocados!");
+			alert = new Alert(AlertType.INFORMATION, "You could buy " + avo.getAvocados() + " avocados with that kind of money!");
+			alert.showAndWait();
+			//message1.setText("That's " + avo.getAvocados() + " avocados!");
 		}
 	}
 		
