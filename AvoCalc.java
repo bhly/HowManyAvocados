@@ -20,6 +20,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DialogPane;
 import java.text.*;
 import java.lang.*;
 
@@ -27,6 +28,7 @@ public class AvoCalc extends Application{
 	
 	private Text message1;
 	private Text message2;
+	private Text saleMessage;
 	
 	private TextField tf;
 		
@@ -41,6 +43,8 @@ public class AvoCalc extends Application{
 	private Label checkLabel;
 	
 	private Alert alert;
+	
+	private BackgroundImage bg;
 	
 	public void start(Stage stage){
 		
@@ -62,13 +66,13 @@ public class AvoCalc extends Application{
 		yes.setToggleGroup(check);
 		no.setToggleGroup(check);
 		no.setSelected(true);
-		checkLabel = new Label("Are avocados on sale right now?");
+		saleMessage = new Text("Are avocados on sale right now?");
 		
 		
 		calc = new Button("How many avocados is that?");
 		calc.setOnAction(this::eventHandler);
 		
-		FlowPane pane = new FlowPane(message1, message2, tf, checkLabel, yes, no, calc);
+		FlowPane pane = new FlowPane(message1, message2, tf, saleMessage, yes, no, calc);
 		pane.setHgap(15);
 		pane.setVgap(20);
 		pane.setAlignment(Pos.CENTER);
@@ -76,18 +80,19 @@ public class AvoCalc extends Application{
 		
 		
 		
-		Scene scene = new Scene(pane, 270, 300);
+		Scene scene = new Scene(pane, 250, 260);
 		
 		BackgroundImage bg = new BackgroundImage(new Image("file:bg.png", 400,400,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
 				
 		pane.setBackground(new Background(bg));
-		
+		     
 		
 		
 		stage.setScene(scene);
 		stage.show();
 	}
+	
 	
 	public void eventHandler(ActionEvent event){
 		if(event.getSource() == calc){
@@ -97,9 +102,17 @@ public class AvoCalc extends Application{
 			else if(no.isSelected())
 				avo.setSale(false);
 			avo.calculate(avo.getDollars(), avo.getSale());
-			alert = new Alert(AlertType.INFORMATION, "You could buy " + avo.getAvocados() + " avocados with that kind of money!");
+			alert = new Alert(AlertType.INFORMATION, "");
+			alert.setHeaderText("You could buy " + avo.getAvocados() + " avocados with that kind of money!");
+			DialogPane dialogPane = alert.getDialogPane();
+			bg = new BackgroundImage(new Image("file:bg2.png", 200,200,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+				BackgroundSize.DEFAULT);
+			dialogPane.setBackground(new Background(bg));
+			dialogPane.setPrefWidth(200);
+			Stage dialogStage = (Stage) alert.getDialogPane().getScene().getWindow();
+				dialogStage.getIcons().add(new Image("icon.png")); 
 			alert.showAndWait();
-			//message1.setText("That's " + avo.getAvocados() + " avocados!");
+			
 		}
 	}
 		
