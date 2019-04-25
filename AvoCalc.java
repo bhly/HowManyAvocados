@@ -27,13 +27,17 @@ public class AvoCalc extends Application{
 	private Text message1;
 	private Text message2;
 	
-	private CheckBox check;
-	
 	private TextField tf;
 		
 	private Button calc; 
 	
 	private Avocado avo;
+	
+	private ToggleGroup check;
+	private RadioButton yes;
+	private RadioButton no;
+	
+	private Label checkLabel;
 	
 	public void start(Stage stage){
 		
@@ -49,13 +53,19 @@ public class AvoCalc extends Application{
 		tf = new TextField();
 		tf.setPrefWidth(65);
 		
-		check = new CheckBox("Are avocados on sale right now?");
-		check.setIndeterminate(false);
+		check = new ToggleGroup();
+		yes = new RadioButton("Yes");
+		no = new RadioButton("No");
+		yes.setToggleGroup(check);
+		no.setToggleGroup(check);
+		no.setSelected(true);
+		checkLabel = new Label("Are avocados on sale right now?");
+		
 		
 		calc = new Button("How many avocados is that?");
 		calc.setOnAction(this::eventHandler);
 		
-		FlowPane pane = new FlowPane(message1, message2, tf, calc);
+		FlowPane pane = new FlowPane(message1, message2, tf, checkLabel, yes, no, calc);
 		pane.setHgap(15);
 		pane.setVgap(20);
 		pane.setAlignment(Pos.CENTER);
@@ -74,8 +84,10 @@ public class AvoCalc extends Application{
 	public void eventHandler(ActionEvent event){
 		if(event.getSource() == calc){
 			avo.setDollars(Integer.parseInt(tf.getText()));
-			if(check.isSelected())
+			if(yes.isSelected())
 				avo.setSale(true);
+			else if(no.isSelected())
+				avo.setSale(false);
 			avo.calculate(avo.getDollars(), avo.getSale());
 			message1.setText("That's " + avo.getAvocados() + " avocados!");
 		}
