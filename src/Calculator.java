@@ -1,11 +1,11 @@
 
-public class Avocado{
+public class Calculator {
 
 	private double dollars;
 	private double avocados;
 	private boolean sale = false;
 
-	public Avocado(double dollars){
+	public Calculator(double dollars){
 		this.dollars = dollars;
 	}
 	
