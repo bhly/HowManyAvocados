@@ -19,38 +19,46 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.control.DialogPane;
-
 import java.lang.*;
 
+/*
+ * Description: A JavaFX based GUI for the Avocado Calculator.
+ * @Author Brynn Haley
+ */
 public class GUI extends Application{
-	
+
+	//Welcome message
 	private Text message1;
+	//Message with instructions to enter dollar amount
 	private Text message2;
+	//Message asking user if avocados are on sale
 	private Text saleMessage;
-	
+	//Textfield for user to enter a dollar amount
 	private TextField tf;
-		
+	//Pressing this button displays the result of the calculation
 	private Button calc; 
-	
+	//Instance of Calculator
 	private Calculator avo;
+	//icon Image
+	private Image icon;
 	
 	private ToggleGroup check;
+	//user checks this if avocados are on sale.
 	private RadioButton yes;
+	//user checks this if avocados are not on sale.
 	private RadioButton no;
-	
+	//togglegroup's label
 	private Label checkLabel;
-	
+	//Pops up with the result of the calculation
 	private Alert alert;
-	
 	private BackgroundImage bg;
 	
 	public void start(Stage stage){
-		
-		
+
 		avo = new Calculator(0);
+		icon = new Image("file:img/icon.png");
 		stage.setTitle("AvoCalculator");
-		
-		stage.getIcons().add(new Image("file:img/icon.png"));
+		stage.getIcons().add(icon);
 		
 		message1 = new Text("Welcome to Avocado Calculator!");
 		message2 = new Text("Enter a dollar amount");
@@ -65,8 +73,7 @@ public class GUI extends Application{
 		no.setToggleGroup(check);
 		no.setSelected(true);
 		saleMessage = new Text("Are avocados on sale right now?");
-		
-		
+
 		calc = new Button("How many avocados is that?");
 		calc.setOnAction(this::eventHandler);
 		
@@ -74,24 +81,17 @@ public class GUI extends Application{
 		pane.setHgap(15);
 		pane.setVgap(20);
 		pane.setAlignment(Pos.CENTER);
-		
-		
-		
-		
+
 		Scene scene = new Scene(pane, 250, 260);
-		
-		BackgroundImage bg = new BackgroundImage(new Image("file:img/bg.png", 400,400,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
-				BackgroundSize.DEFAULT);
+
+		BackgroundImage bg = new BackgroundImage(new Image("file:img/bg.png", 400,400,false,true),
+						BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 				
 		pane.setBackground(new Background(bg));
-		     
-		
-		
 		stage.setScene(scene);
 		stage.show();
 	}
-	
-	
+
 	public void eventHandler(ActionEvent event){
 		if(event.getSource() == calc){
 			avo.setDollars(Integer.parseInt(tf.getText()));
@@ -99,26 +99,21 @@ public class GUI extends Application{
 				avo.setSale(true);
 			else if(no.isSelected())
 				avo.setSale(false);
+
 			avo.calculate(avo.getDollars(), avo.getSale());
 			alert = new Alert(AlertType.INFORMATION, "");
 			alert.setHeaderText("You could buy " + avo.getAvocados() + " avocados with that kind of money!");
+
 			DialogPane dialogPane = alert.getDialogPane();
 			bg = new BackgroundImage(new Image("file:img/bg2.png", 200,200,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
+
 			dialogPane.setBackground(new Background(bg));
 			dialogPane.setPrefWidth(200);
+
 			Stage dialogStage = (Stage) alert.getDialogPane().getScene().getWindow();
-				dialogStage.getIcons().add(new Image("img/icon.png"));
+				dialogStage.getIcons().add(icon);
 			alert.showAndWait();
-			
 		}
 	}
-		
-		
-		
-	
-	
-
-	
-
 }
