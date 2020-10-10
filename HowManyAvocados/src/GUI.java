@@ -1,25 +1,16 @@
 import javafx.application.Application;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.text.Text;
-import javafx.geometry.Pos;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
-import java.lang.*;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /*
  * Description: A JavaFX based GUI for the Avocado Calculator.
@@ -27,57 +18,42 @@ import java.lang.*;
  */
 public class GUI extends Application{
 
-	//Welcome message
-	private Text message1;
-	//Message with instructions to enter dollar amount
-	private Text message2;
-	//Message asking user if avocados are on sale
-	private Text saleMessage;
 	//Textfield for user to enter a dollar amount
 	private TextField tf;
 	//Pressing this button displays the result of the calculation
-	private Button calc; 
+	private Button calculate;
 	//Instance of Calculator
-	private Calculator avo;
+	private Calculator calculator;
+	private GroceryItem groceryItem;
 	//icon Image
 	private Image icon;
-	
-	private ToggleGroup check;
-	//user checks this if avocados are on sale.
-	private RadioButton yes;
-	//user checks this if avocados are not on sale.
-	private RadioButton no;
-	//togglegroup's label
-	private Label checkLabel;
-	//Pops up with the result of the calculation
-	private Alert alert;
 	private BackgroundImage bg;
 	
 	public void start(Stage stage){
 
-		avo = new Calculator(0);
+		calculator = new Calculator(0);
+		// Instantiate a Purchasable object according to user selection
+		GroceryFactory gfactory = new GroceryFactory();
+		//type of grocery item to be selected by user. Because this is AvoCalc, default is "Avocado"
+		String type = "Avocado";
+		groceryItem = gfactory.getGroceryItem(type);
+
 		icon = new Image("file:img/icon.png");
 		stage.setTitle("AvoCalculator");
 		stage.getIcons().add(icon);
-		
-		message1 = new Text("Welcome to Avocado Calculator!");
-		message2 = new Text("Enter a dollar amount");
+
+		//Welcome message
+		Text message1 = new Text("Welcome to Avocado Calculator!");
+		//Message with instructions to enter dollar amount
+		Text message2 = new Text("Enter a dollar amount");
 		
 		tf = new TextField();
 		tf.setPrefWidth(65);
-		
-		check = new ToggleGroup();
-		yes = new RadioButton("Yes");
-		no = new RadioButton("No");
-		yes.setToggleGroup(check);
-		no.setToggleGroup(check);
-		no.setSelected(true);
-		saleMessage = new Text("Are avocados on sale right now?");
 
-		calc = new Button("How many avocados is that?");
-		calc.setOnAction(this::eventHandler);
+		calculate = new Button("How many avocados is that?");
+		calculate.setOnAction(this::eventHandler);
 		
-		FlowPane pane = new FlowPane(message1, message2, tf, saleMessage, yes, no, calc);
+		FlowPane pane = new FlowPane(message1, message2, tf, calculate);
 		pane.setHgap(15);
 		pane.setVgap(20);
 		pane.setAlignment(Pos.CENTER);
@@ -92,17 +68,13 @@ public class GUI extends Application{
 		stage.show();
 	}
 
-	public void eventHandler(ActionEvent event){
-		if(event.getSource() == calc){
-			avo.setDollars(Integer.parseInt(tf.getText()));
-			if(yes.isSelected())
-				avo.setSale(true);
-			else if(no.isSelected())
-				avo.setSale(false);
-
-			avo.calculate(avo.getDollars(), avo.getSale());
-			alert = new Alert(AlertType.INFORMATION, "");
-			alert.setHeaderText("You could buy " + avo.getAvocados() + " avocados with that kind of money!");
+	private void eventHandler(ActionEvent event){
+		if(event.getSource() == calculate){
+			calculator.setDollars(Integer.parseInt(tf.getText()));
+			calculator.calculate(groceryItem);
+			//Pops up with the result of the calculation
+			Alert alert = new Alert(AlertType.INFORMATION, "");
+			alert.setHeaderText("You could buy " + calculator.calculate(groceryItem) + " " +groceryItem.getName() + " with that kind of money!");
 
 			DialogPane dialogPane = alert.getDialogPane();
 			bg = new BackgroundImage(new Image("file:img/bg2.png", 200,200,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
