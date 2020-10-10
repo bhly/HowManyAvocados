@@ -1,8 +1,8 @@
 /*
-Title: Purchasable.java
+Title: GroceryItem.java
 Author: Brynn Haley
 Date: October 10th 2020
-Description: An interface that represents an item that can be purchased.
+Description: An abstract class representing a grocery item.
  */
 
 public abstract class GroceryItem {
